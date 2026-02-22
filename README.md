@@ -1,4 +1,4 @@
-````# Medical Literature Search Assessment
+# Medical Literature Search Assessment
 
 ## Time: 3 hours
 
@@ -122,4 +122,3 @@ You create the rest.
 ## Questions?
 
 Document assumptions in `DECISION_LOG.md` and proceed.
-````
