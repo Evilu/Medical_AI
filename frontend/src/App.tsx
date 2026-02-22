@@ -1,6 +1,7 @@
 import { SearchBar } from "@/components/search/SearchBar";
 import { SearchFilters } from "@/components/search/SearchFilters";
 import { SearchResults } from "@/components/search/SearchResults";
+import { FocusedArticle } from "@/components/articles/FocusedArticle";
 import { SaveToCollectionDialog } from "@/components/collections/SaveToCollectionDialog";
 import { CreateCollectionDialog } from "@/components/collections/CreateCollectionDialog";
 import { CollectionPanel } from "@/components/collections/CollectionPanel";
@@ -14,6 +15,7 @@ function App() {
   useUrlSync();
 
   const togglePanel = useCollectionStore((s) => s.togglePanel);
+  const focusedArticle = useCollectionStore((s) => s.focusedArticle);
   const { data: collectionsData } = useCollections();
   const collectionCount = collectionsData?.data?.length ?? 0;
 
@@ -56,16 +58,22 @@ function App() {
 
       {/* Main */}
       <main className="px-4 sm:px-6 lg:mx-auto lg:max-w-4xl">
-        {/* Search */}
-        <div className="py-6 sm:py-8">
-          <SearchBar />
-        </div>
+        {focusedArticle ? (
+          <FocusedArticle article={focusedArticle} />
+        ) : (
+          <>
+            {/* Search */}
+            <div className="py-6 sm:py-8">
+              <SearchBar />
+            </div>
 
-        {/* Filters */}
-        <SearchFilters />
+            {/* Filters */}
+            <SearchFilters />
 
-        {/* Results */}
-        <SearchResults />
+            {/* Results */}
+            <SearchResults />
+          </>
+        )}
       </main>
 
       {/* Collection dialogs (portals) */}

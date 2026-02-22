@@ -6,12 +6,14 @@ import {
   useRemoveArticle,
 } from "@/hooks/useCollections";
 import { useCollectionStore } from "@/stores/collectionStore";
+import type { Article } from "@/types/article";
 
 export function CollectionPanel() {
   const isOpen = useCollectionStore((s) => s.isPanelOpen);
   const toggle = useCollectionStore((s) => s.togglePanel);
   const activeId = useCollectionStore((s) => s.activeCollectionId);
   const setActiveId = useCollectionStore((s) => s.setActiveCollection);
+  const viewArticle = useCollectionStore((s) => s.viewArticle);
   const backdropRef = useRef<HTMLDivElement>(null);
 
   const { data: collectionsData, isLoading } = useCollections();
@@ -128,13 +130,23 @@ export function CollectionPanel() {
                 </p>
               </div>
 
-              {detail.articles && (detail.articles as Array<{ pmid: string; title: string; journal: string; year: number }>).length > 0 ? (
+              {detail.articles && (detail.articles as Article[]).length > 0 ? (
                 <ul className="space-y-2">
-                  {(detail.articles as Array<{ pmid: string; title: string; journal: string; year: number }>).map(
+                  {(detail.articles as Article[]).map(
                     (article) => (
                       <li
                         key={article.pmid}
-                        className="rounded-xl bg-surface-secondary p-3 group/item"
+                        className="rounded-xl bg-surface-secondary p-3 group/item cursor-pointer
+                                   hover:bg-surface-tertiary active:bg-border-subtle transition-colors"
+                        onClick={() => viewArticle(article)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            viewArticle(article);
+                          }
+                        }}
                       >
                         <div className="flex items-start gap-3">
                           <div className="flex-1 min-w-0">
@@ -146,7 +158,10 @@ export function CollectionPanel() {
                             </p>
                           </div>
                           <button
-                            onClick={() => handleRemoveArticle(article.pmid)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveArticle(article.pmid);
+                            }}
                             className="shrink-0 min-h-[36px] min-w-[36px] flex items-center justify-center
                                        rounded-lg text-text-tertiary hover:text-error
                                        active:bg-red-50 transition-colors

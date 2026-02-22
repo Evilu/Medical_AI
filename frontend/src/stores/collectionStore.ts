@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import type { Article } from "@/types/article";
 
 interface CollectionUIState {
   // Save-to-collection dialog
@@ -13,12 +14,17 @@ interface CollectionUIState {
   isPanelOpen: boolean;
   activeCollectionId: string | null;
 
+  // Focused article from collection (shown in main view)
+  focusedArticle: Article | null;
+
   openSaveDialog: (pmid: string) => void;
   closeSaveDialog: () => void;
   openCreateDialog: () => void;
   closeCreateDialog: () => void;
   togglePanel: () => void;
   setActiveCollection: (id: string | null) => void;
+  viewArticle: (article: Article) => void;
+  clearFocusedArticle: () => void;
 }
 
 export const useCollectionStore = create<CollectionUIState>()(
@@ -29,6 +35,7 @@ export const useCollectionStore = create<CollectionUIState>()(
       isCreateDialogOpen: false,
       isPanelOpen: false,
       activeCollectionId: null,
+      focusedArticle: null,
 
       openSaveDialog: (pmid) =>
         set(
@@ -50,6 +57,14 @@ export const useCollectionStore = create<CollectionUIState>()(
         set((s) => ({ isPanelOpen: !s.isPanelOpen }), false, "togglePanel"),
       setActiveCollection: (id) =>
         set({ activeCollectionId: id }, false, "setActiveCollection"),
+      viewArticle: (article) =>
+        set(
+          { focusedArticle: article, isPanelOpen: false },
+          false,
+          "viewArticle",
+        ),
+      clearFocusedArticle: () =>
+        set({ focusedArticle: null }, false, "clearFocusedArticle"),
     }),
     { name: "collection-store" },
   ),
