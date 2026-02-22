@@ -68,8 +68,8 @@ def create_indexes(collection, collection_name: str):
         name="text_search_idx"
     )
 
-    # Index on year for filtering
-    collection.create_index([("year", ASCENDING)], name="year_idx")
+    # Index on publication_year for filtering
+    collection.create_index([("publication_year", ASCENDING)], name="year_idx")
 
     # Index on journal for filtering
     collection.create_index([("journal", ASCENDING)], name="journal_idx")

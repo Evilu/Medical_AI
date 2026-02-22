@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  /* Surface colors */
+  --color-surface-primary: #ffffff;
+  --color-surface-secondary: #f7f7f8;
+  --color-surface-tertiary: #ececed;
+  --color-surface-inverse: #0d0d0d;
+
+  /* Text colors */
+  --color-text-primary: #0d0d0d;
+  --color-text-secondary: #6e6e80;
+  --color-text-tertiary: #8e8ea0;
+  --color-text-inverse: #ffffff;
+
+  /* Border colors */
+  --color-border-default: #e5e5e5;
+  --color-border-subtle: #f0f0f0;
+  --color-border-strong: #d1d1d6;
+
+  /* Accent — OpenAI green */
+  --color-accent: #10a37f;
+  --color-accent-hover: #0d8c6d;
+  --color-accent-light: #e6f7f2;
+
+  /* Semantic */
+  --color-success: #10a37f;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* Fonts */
+  --font-sans: "Inter", ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Monaco, Consolas, monospace;
+
+  /* Shadows */
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-elevated: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-float: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --shadow-search: 0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --shadow-search-focus: 0 4px 16px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.08);
+
+  /* Animations */
+  --animate-fade-in: fadeIn 0.3s ease-out;
+  --animate-slide-up: slideUp 0.3s ease-out;
+  --animate-slide-down: slideDown 0.2s ease-out;
+  --animate-scale-in: scaleIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  0% { opacity: 0; transform: scale(0.97); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Base styles */
+body {
+  @apply bg-surface-primary text-text-primary antialiased;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  @apply bg-accent/10 text-text-primary;
+}
+
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-accent;
+}
+
+/* Prevent iOS zoom on input focus */
+@supports (-webkit-touch-callout: none) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
