@@ -1,124 +1,113 @@
-# Medical Literature Search Assessment
+# MedSearch
 
-## Time: 3 hours
+A medical literature search interface for ~25,000 PubMed articles. Search, filter, and organize research papers with a clean, mobile-first UI.
 
-## Overview
+## Quickstart
 
-Build a medical literature search interface for ~25,000 PubMed articles. **Focus on creating an exceptional search experience** - we want to see great UX/UI skills and thoughtful design.
-
----
-
-## AI Tool Usage
-
-**You're encouraged to use AI assistants** (Claude, ChatGPT, Copilot, Cursor, etc.) throughout this assessment.
-
-### Submit These 3 Things:
-1. Working code
-2. AI conversation history (screenshots or export)
-3. Completed `DECISION_LOG.md`
-
-> We care about how you work with AI as much as the result.
-
----
-
-## Requirements
-
-### Core: Search Experience (Focus Here!)
-
-Build a clean, intuitive search interface:
-
-- **Search bar** with real-time or submit-based search
-- **Results display** showing title, authors, journal, year, abstract
-- **Article details** - expandable view with full information
-- **Loading states** and empty states
-- **Responsive design** - works on mobile and desktop
-- **Performance** - handles the full 25K dataset smoothly
-
-**Search implementation**: Use any approach you prefer (keyword search, MongoDB text search, full-text indexes, etc.). We care more about UX than the specific technical approach.
-
-### If Time Permits: Collections
-
-Add the ability to save articles to collections:
-
-- Create/delete collections
-- Add/remove articles from collections
-- View collection contents
-- Basic CRUD operations with smooth UX
-
----
-
-## What We Evaluate
-
-| Focus | Weight |
-|-------|--------|
-| UX/UI & Design Polish | 45% |
-| AI Collaboration | 25% |
-| Frontend Code Quality | 20% |
-| Backend/Search | 10% |
-
-We prioritize **great user experience over feature completeness**. A polished search interface beats a buggy app with all features.
-
----
-
-## Tech Stack
-
-**Suggested** (use what you're comfortable with):
-- Frontend: React
-- Backend: Python/FastAPI or Node/Express
-- Database: MongoDB (provided)
-
-Document your choices in `DECISION_LOG.md`.
-
----
-
-## Getting Started
-
-### 1. Install Docker
-For Mac: `brew install --cask docker`
-
-### 2. Start Docker Desktop
-
-### 3. Start MongoDB
 ```bash
-docker compose up
+# 1. Start MongoDB + load data
+docker compose up -d
+
+# 2. Start backend (port 3000)
+cd backend && npm install && npm run start:dev
+
+# 3. Start frontend (port 5173) — in a new terminal
+cd frontend && npm install && npm run dev
 ```
 
-This starts MongoDB with ~25K articles loaded at `localhost:27017`.
-- Database: `medical_search`
-- Collections: `sample_articles` (50 items), `pubmed_articles` (25K items)
-- Starts Mongo Express (DB admin UI) at `http://localhost:8081` (admin/admin)
-  
-### 4. Build Your App
-Create your frontend and backend however you prefer. Start with `sample_articles` for quick testing, then switch to the full dataset.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-See `data/README.md` for article schema details.
+## Prerequisites
 
----
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for MongoDB)
+- [Node.js](https://nodejs.org/) 18+ (LTS recommended)
+- npm 9+
 
-## What's Provided
+## Architecture
 
 ```
-├── README.md
-├── DECISION_LOG.md          # Fill this in
-├── docker-compose.yml       # MongoDB setup
-├── data/
-    ├── sample_articles.jsonl    # 50 articles
-    └── pubmed_articles.jsonl    # 25K articles
+Medical_AI/
+├── frontend/          Vite + React 19 + TypeScript + Tailwind CSS v4
+├── backend/           NestJS + Mongoose + MongoDB
+├── data/              PubMed article datasets (JSONL)
+├── scripts/           Python data loader (runs in Docker)
+└── docker-compose.yml MongoDB + Mongo Express + data loader
 ```
 
-You create the rest.
+### Tech Stack
 
----
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS v4, Zustand, TanStack Query v5 |
+| Backend | NestJS, Mongoose, class-validator, Swagger |
+| Database | MongoDB 7.0 (via Docker) |
+| Testing | Vitest |
 
-## Tips
+## Features
 
-- Use a UI library (Material-UI, Shadcn, etc.) to save time
-- Test with sample data first, full dataset second
-- Polish the search experience before adding collections
-- Mobile responsiveness matters
+### Search
+- Full-text search across 25K PubMed articles (MongoDB `$text` with relevance scoring)
+- Filter by publication year and SJR quartile
+- Paginated results with smooth page transitions
+- Debounced search input (300ms)
+- URL state sync — shareable search URLs like `?q=diabetes&page=2`
 
----
+### Article Details
+- Expandable article cards with full abstract, authors, journal info
+- Color-coded SJR quartile badges (Q1–Q4)
+- Direct links to PubMed and DOI
+- Keyboard shortcuts: `/` to focus search, `Escape` to clear
 
-## Questions?
+### Collections
+- Create named collections to organize articles
+- Save/remove articles from any collection
+- Browse collection contents and view full article details
+- Collection count badge in header
 
-Document assumptions in `DECISION_LOG.md` and proceed.
+### Design
+- Mobile-first responsive layout (375px → desktop)
+- OpenAI-inspired design system: Inter font, clean typography, generous whitespace
+- 44px touch targets, tap feedback, iOS zoom prevention
+- Skeleton loaders, empty states, error states with retry
+
+## Services
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| Frontend | [localhost:5173](http://localhost:5173) | React SPA |
+| Backend API | [localhost:3000/api](http://localhost:3000/api) | NestJS REST API |
+| Swagger Docs | [localhost:3000/api/docs](http://localhost:3000/api/docs) | Interactive API docs |
+| Mongo Express | [localhost:8081](http://localhost:8081) | Database admin UI (admin/admin) |
+| MongoDB | localhost:27017 | Database (`medical_search`) |
+
+## API Endpoints
+
+### Articles
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/articles/search?q=&page=&limit=&year=&quartile=` | Full-text search with pagination |
+| GET | `/api/articles/filters` | Available years and journals for filters |
+| GET | `/api/articles/:pmid` | Single article by PMID |
+
+### Collections
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/collections` | Create a collection |
+| GET | `/api/collections` | List all collections |
+| GET | `/api/collections/:id` | Get collection with articles |
+| DELETE | `/api/collections/:id` | Delete a collection |
+| POST | `/api/collections/:id/articles` | Add article to collection |
+| DELETE | `/api/collections/:id/articles/:pmid` | Remove article from collection |
+
+## Running Tests
+
+```bash
+cd backend && npm test
+```
+
+## Project Documentation
+
+- [TASK.md](./TASK.md) — Original assessment brief
+- [DECISION_LOG.md](./DECISION_LOG.md) — Architectural decisions, trade-offs, and time tracking
