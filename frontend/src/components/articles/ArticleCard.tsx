@@ -1,6 +1,7 @@
 import type { Article } from "@/types/article";
 import { formatAuthors } from "@/lib/utils";
 import { useSearchStore } from "@/stores/searchStore";
+import { useCollectionStore } from "@/stores/collectionStore";
 
 const QUARTILE_STYLES: Record<number, string> = {
   1: "bg-emerald-50 text-emerald-700",
@@ -13,6 +14,7 @@ export function ArticleCard({ article }: { article: Article }) {
   const expandedId = useSearchStore((s) => s.expandedArticleId);
   const setExpanded = useSearchStore((s) => s.setExpandedArticle);
   const expanded = expandedId === article._id;
+  const openSaveDialog = useCollectionStore((s) => s.openSaveDialog);
 
   const toggle = () => setExpanded(expanded ? null : article._id);
 
@@ -122,6 +124,19 @@ export function ArticleCard({ article }: { article: Article }) {
               >
                 PubMed &rarr;
               </a>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openSaveDialog(article.pmid);
+                }}
+                className="text-accent hover:text-accent-hover active:text-accent-hover/80 font-medium
+                           py-1 min-h-[44px] inline-flex items-center gap-1.5"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                </svg>
+                Save
+              </button>
               {article.sjr_rank !== null && (
                 <span>
                   <span className="text-text-tertiary">SJR:</span>{" "}

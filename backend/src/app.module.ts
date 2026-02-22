@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ArticlesModule } from "./articles/articles.module";
+import { CollectionsModule } from "./collections/collections.module";
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { ArticlesModule } from "./articles/articles.module";
       process.env.MONGODB_URI || "mongodb://localhost:27017/medical_search",
     ),
     ArticlesModule,
+    CollectionsModule,
   ],
 })
 export class AppModule {}

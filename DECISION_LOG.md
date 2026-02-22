@@ -68,15 +68,18 @@ MongoDB `$text` full-text search with `$meta: textScore` relevance ranking
 **Component structure:**
 ```
 App
-  Header (sticky, backdrop-blur)
+  Header (sticky, backdrop-blur, collections icon with badge)
   SearchBar (hero component)
   SearchFilters (collapsible on mobile, inline on md+)
   SearchResults (orchestrator)
     EmptyState (demo queries / no results)
     ArticleSkeleton (loading)
     ErrorState (retry)
-    ArticleCard[] (expandable, animated)
+    ArticleCard[] (expandable, animated, save button)
     Pagination (mobile-optimized)
+  SaveToCollectionDialog (bottom-sheet on mobile, modal on desktop)
+  CreateCollectionDialog (form modal)
+  CollectionPanel (full-screen mobile, side panel desktop)
 ```
 
 **Key UX polish:**
@@ -96,9 +99,18 @@ App
 
 ## 4. Collections (If Implemented)
 
-**Did you implement collections?** [ ] Yes  [x] No
+**Did you implement collections?** [x] Yes  [ ] No
 
-Prioritized search UX polish over feature breadth, per evaluation weights (UX/UI 45% vs Backend 10%).
+**What I built:**
+- **Backend**: Full NestJS module with Mongoose schema, 6 REST endpoints (CRUD + add/remove articles), validation (article existence check, duplicate prevention)
+- **Frontend**: 3 UI components — `SaveToCollectionDialog` (bottom-sheet on mobile, modal on desktop), `CreateCollectionDialog` (form with validation), `CollectionPanel` (full-screen on mobile, slide-in panel on desktop with list → detail navigation)
+- **Integration**: Bookmark/save button on every expanded article card, collections icon in header with badge count, TanStack Query mutations with automatic cache invalidation
+
+**Key decisions:**
+- Bottom-sheet pattern on mobile (iOS/Android native feel), centered modals on desktop
+- Separate Zustand store for collection UI state (dialogs open/close), TanStack Query for server state
+- "Already saved" visual feedback — saved articles show a green checkmark and are un-clickable
+- Panel uses list → detail navigation pattern (not nested routes) for simplicity
 
 ---
 
@@ -122,8 +134,9 @@ Prioritized search UX polish over feature breadth, per evaluation weights (UX/UI
 | Frontend scaffold + design system | ~25 min |
 | Core search UI components | ~40 min |
 | Polish (animations, keyboard, URL sync) | ~15 min |
+| Collections feature (backend + frontend) | ~25 min |
 | Testing + documentation | ~15 min |
-| **Total** | **~2h 15min** |
+| **Total** | **~2h 40min** |
 
 ---
 
@@ -137,7 +150,7 @@ Prioritized search UX polish over feature breadth, per evaluation weights (UX/UI
 
 **What I'd improve with more time:**
 - Add search term highlighting in results (highlight matching words)
-- Implement collections feature with optimistic updates
+- Optimistic updates for collection mutations (instant UI feedback)
 - Add a copy-citation button
 - E2E tests with Playwright
 - Better error boundaries
