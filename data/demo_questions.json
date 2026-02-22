@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "category": "Treatment Comparison",
+    "query": "What are the latest findings comparing GLP-1 receptor agonists versus SGLT2 inhibitors for type 2 diabetes management?"
+  },
+  {
+    "id": 2,
+    "category": "Emerging Therapy",
+    "query": "What is the current evidence for lecanemab and other anti-amyloid therapies in early Alzheimer's disease?"
+  },
+  {
+    "id": 3,
+    "category": "Clinical Guidelines",
+    "query": "What are the current recommendations for anticoagulation in atrial fibrillation patients with high bleeding risk?"
+  },
+  {
+    "id": 4,
+    "category": "Drug Safety",
+    "query": "What cardiovascular safety data exists for immunotherapy checkpoint inhibitors in cancer patients?"
+  },
+  {
+    "id": 5,
+    "category": "Obesity Management",
+    "query": "How effective are GLP-1 agonists for weight loss in non-diabetic obese patients, and what are the long-term outcomes?"
+  }
+]
